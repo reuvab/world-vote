@@ -80,13 +80,17 @@ export default function Page({ params }: { params: { id: string } }) {
         <p className='text-gray-500 text-xs'>Survey {params.id}</p>
         <p className='font-bold text-lg'>Thank you for voting in this Survey:</p>
         <p className='pb-3 text-sm'>Would you like all building to be painted in red?</p>
-        <p>This survey will finish in 25 minutes</p>
       </div>
       <div>
         <h1 className='font-bold text-lg'>Results</h1>
         <div className='flex flex-col'>
           <Bar data={data} options={options} />
         </div>
+      </div>
+      <div>
+        <h1 className='font-bold text-lg'>Total Votes</h1>
+        <p className='pb-4'>{12 + 31}</p>
+        <p className='text-xs text-gray-500'>This survey will finish in 25 minutes</p>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { Survey } from '@/types';
 import classNames from 'classnames';
 import Button from '@mui/base/Button';
 import { useRouter } from 'next/navigation';
+import { DocumentTextIcon } from '@heroicons/react/24/solid';
 
 const Option = ({ option }: { option: string }) => (
   <RadioGroup.Option value={option}>
@@ -64,6 +65,16 @@ export const SurveyCard = ({ title, image, option1, option2, id }: Survey) => {
             Vote
           </Button>
         </div>
+      </div>
+      <div>
+        <a
+          href='https://ipfs.io/ipfs/bafybeidlbmmlkqaafe3nu535hiiba44ks23gani3ph4njiakdctok2ip2y/'
+          target='_blank'
+          className='text-lg text-gray-500 flex flex-row'
+        >
+          <DocumentTextIcon className='w-6 h-6 inline-block mr-2' />
+          View Survey Files on IPFS
+        </a>
       </div>
     </div>
   );
