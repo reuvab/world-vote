@@ -1,12 +1,12 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { Survey } from '@/types';
 import classNames from 'classnames';
 import Button from '@mui/base/Button';
 import { useRouter } from 'next/navigation';
 import { DocumentTextIcon } from '@heroicons/react/24/solid';
-import { getContract } from '@/utils/contract';
+import { getContract, handleContractTransaction } from '@/utils/contract';
 
 const Option = ({ option }: { option: string }) => (
   <RadioGroup.Option value={option}>
@@ -35,7 +35,9 @@ const Option = ({ option }: { option: string }) => (
 );
 export const SurveyCard = ({ title, hash, description, endTime, id }: Survey) => {
   const router = useRouter();
-  const [selected, setSelected] = React.useState(null);
+  const [selected, setSelected] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <div className=''>
       <p className='pb-4 text-xs text-gray-500'>Select an Answer for Survey {id}</p>
@@ -57,15 +59,24 @@ export const SurveyCard = ({ title, hash, description, endTime, id }: Survey) =>
         </RadioGroup>
         <div className='flex items-center justify-end'>
           <Button
+            disabled={isLoading}
             onClick={async () => {
               if (!selected) return;
+              setIsLoading(true);
               const contract = await getContract();
-              await contract.vote(id, selected === 'Yes' ? true : false);
-              router.push(`/result/${id}`);
+              const tx = await contract.vote(id, selected === 'Yes' ? true : false);
+              const receipt = await handleContractTransaction(tx);
+              if (receipt) {
+                setIsLoading(false);
+                router.push(`/result/${id}`);
+              } else {
+                console.log('Transaction failed');
+                setIsLoading(false);
+              }
             }}
             className='button w-[60%]'
           >
-            Vote
+            {isLoading ? 'Registering Vote...' : 'Vote'}
           </Button>
         </div>
       </div>

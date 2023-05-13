@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Chart as ChartJS,
@@ -12,6 +12,8 @@ import {
   CategoryScale,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { getContract } from '@/utils/contract';
+import { BigNumber } from 'ethers';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
@@ -40,13 +42,22 @@ const options = {
 };
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [poolInfo, setPoolInfo] = React.useState<Object | undefined>(undefined);
+  const [poolTitle, setPoolTitle] = useState('');
+  const [yesVotes, setYesVotes] = useState<BigNumber>(BigNumber.from(0));
+  const [noVotes, setNoVotes] = useState<BigNumber>(BigNumber.from(0));
 
   useEffect(() => {
     const fetchPoolInfo = async () => {
       //TODO: replace by smart contract call
-      const res = await fetch(`/api/poll/${params.id}`);
-      setPoolInfo(data);
+      const contract = await getContract();
+      const data = await contract.getPoll(params.id);
+
+      console.log(data);
+      const [poolTitle, , yesVotes, noVotes] = data;
+
+      setPoolTitle(poolTitle);
+      setYesVotes(yesVotes);
+      setNoVotes(noVotes);
     };
     fetchPoolInfo();
   }, []);
@@ -57,7 +68,7 @@ export default function Page({ params }: { params: { id: string } }) {
       {
         axis: 'y',
         label: 'Votes',
-        data: [65, 59],
+        data: [yesVotes.toNumber(), noVotes.toNumber()],
         fill: false,
         backgroundColor: ['#4299E1', 'rgb(148 163 184)'],
         borderColor: ['rgb(120 113 108);', 'rgb(120 113 108);'],
@@ -79,7 +90,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className='flex flex-col'>
         <p className='text-gray-500 text-xs'>Survey {params.id}</p>
         <p className='font-bold text-lg'>Thank you for voting in this Survey:</p>
-        <p className='pb-3 text-sm'>Would you like all building to be painted in red?</p>
+        <p className='pb-3 text-sm'>{poolTitle}</p>
       </div>
       <div>
         <h1 className='font-bold text-lg'>Results</h1>
@@ -89,7 +100,7 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
       <div>
         <h1 className='font-bold text-lg'>Total Votes</h1>
-        <p className='pb-4'>{12 + 31}</p>
+        <p className='pb-4'>{yesVotes.add(noVotes).toString()}</p>
         <p className='text-xs text-gray-500'>This survey will finish in 25 minutes</p>
       </div>
     </div>
