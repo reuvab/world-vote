@@ -1,1 +1,1 @@
-# World Vote (ETHGlobal Lisbon hackathon)
+#EthGlobal Lisbon
