@@ -5,12 +5,11 @@ import Input from '@mui/base/Input';
 import { Survey } from '@/types';
 
 const initialState: Survey = {
+  id: '',
   title: '',
   image: '',
   option1: '',
   option2: '',
-  option3: '',
-  option4: '',
 };
 
 type Action = {
@@ -28,10 +27,6 @@ const reducer = (state: Survey, action: Action) => {
       return { ...state, option1: action.payload };
     case 'option2':
       return { ...state, option2: action.payload };
-    case 'option3':
-      return { ...state, option3: action.payload };
-    case 'option4':
-      return { ...state, option4: action.payload };
     case 'reset':
       return initialState;
     default:
@@ -76,9 +71,8 @@ export const PoolFormCreator = () => {
         image: state.image,
         option1: state.option1,
         option2: state.option2,
-        option3: state.option3,
-        option4: state.option4,
       });
+      
       dispatch({ type: 'reset', payload: '' });
       setIsLoading(false);
     }, 200);
@@ -100,18 +94,6 @@ export const PoolFormCreator = () => {
           value={state.option2}
           dispatch={dispatch}
           field='option2'
-        />
-        <PoolFormInput
-          label='Pool Option 3'
-          value={state.option3}
-          dispatch={dispatch}
-          field='option3'
-        />
-        <PoolFormInput
-          label='Pool Option 4'
-          value={state.option4}
-          dispatch={dispatch}
-          field='option4'
         />
       </form>
       <Button
