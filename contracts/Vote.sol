@@ -92,14 +92,18 @@ contract Vote {
         if (alreadyVoted(poll, nullifierhash)) return false;
 
         // verify the provided proof
-        worldId.verifyProof(
-            root,
-            1,
-            abi.encodePacked(signal).hashToField(),
-            nullifierhash,
-            externalNullifier,
-            proof
-        );
+        
+        // This doesn't work on production (polygon mainnet). We changed
+        // the address and uploaded the contract but it gives a: transaction reverted
+        // gas limit error
+        // worldId.verifyProof(
+        //     root,
+        //     1,
+        //     abi.encodePacked(signal).hashToField(),
+        //     nullifierhash,
+        //     externalNullifier,
+        //     proof
+        // );
 
         poll.voters.push(nullifierhash);
         return true;

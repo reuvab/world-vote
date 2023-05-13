@@ -9,6 +9,10 @@ module.exports = {
     polygon_mumbai: {
       url: "https://rpc-mumbai.maticvigil.com",
       accounts: ["0x26a6fe64374954e75a2fdd05892708554555bb341321b657744ec3f9edab30eb"]
-    }
+    },
+    // polygon: {
+    //   url: "https://polygon-rpc.com",
+    //   accounts: [""]
+    // }
   }
 };
