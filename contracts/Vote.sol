@@ -2,28 +2,43 @@
 pragma solidity ^0.8.18;
 
 contract Vote {
-    struct Votes {
+    struct Poll {
+        string title;
+        string description;
         uint256 yes;
         uint256 no;
+        string fileHash;
     }
 
-    address[] currentPolls;
+    Poll[] polls;
 
-    mapping(address => Votes) polls;
+    uint256 pollCounter = 0;
 
-    event PollCreated(address pollId);
-    event VoteCast(address pollId, bool voteType);
+    event PollCreated(uint256 pollId);
+    event VoteCast(uint256 pollId, bool voteType);
 
-    function createPoll(address pollId) public {
-        currentPolls.push(pollId);
-        
-        polls[pollId].yes = 0;
-        polls[pollId].no = 0;
+    function createPoll(string memory _title, string memory _description, string memory _fileHash) public {
+        polls[pollCounter].title = _title;
+        polls[pollCounter].description = _description;
+        polls[pollCounter].yes = 0;
+        polls[pollCounter].no = 0;
+        polls[pollCounter].fileHash = _fileHash;
 
-        emit PollCreated(pollId);
+        emit PollCreated(pollCounter);
+
+        pollCounter++;
     }
 
-    function vote(address pollId, bool voteType) public {
+    function getAllPolls() public view returns(Poll[] memory) {
+        return polls;
+    }
+
+    function getPoll(uint256 pollId) public view returns(Poll memory) {
+        require(isValidPoll(pollId), "invalid poll");
+        return polls[pollId];
+    }
+
+    function vote(uint256 pollId, bool voteType) public {
         require(isValidPoll(pollId), "invalid poll");
         if (voteType) {
             polls[pollId].yes++;
@@ -34,12 +49,11 @@ contract Vote {
         emit VoteCast(pollId, voteType);
     }
 
-    function isValidPoll(address pollId) private view returns (bool) {
-        for (uint256 i = 0; i < currentPolls.length; i++) {
-            if (currentPolls[i] == pollId) {
-                return true;
-            }
+    function isValidPoll(uint256 pollId) private view returns (bool) {
+        if (pollId < polls.length) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }
