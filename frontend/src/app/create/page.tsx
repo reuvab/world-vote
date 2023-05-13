@@ -7,8 +7,8 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <section className='h-20 border w-[50%]'>
-      <h1 className='text-2xl'>Create New Poll</h1>
+    <section className='h-full w-full p-4'>
+      <h1 className='font-bold'>Create New Poll</h1>
       <PoolFormCreator />
     </section>
   );

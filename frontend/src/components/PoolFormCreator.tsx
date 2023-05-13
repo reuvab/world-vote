@@ -47,15 +47,15 @@ const PoolFormInput = ({
   field: Action['type'];
 }) => {
   return (
-    <>
-      <label className='text-xl'>{label}</label>
-      <Input
-        className='border'
+    <div className='w-full'>
+      <label className=''>{label}</label>
+      <input
+        className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
         type='text'
         value={value}
         onChange={(v) => dispatch({ type: field, payload: v.target.value })}
       />
-    </>
+    </div>
   );
 };
 
@@ -82,8 +82,8 @@ export const PoolFormCreator = () => {
   };
 
   return (
-    <>
-      <form className='flex flex-col'>
+    <div className='pt-4 flex flex-col gap-6'>
+      <form className='flex flex-col gap-2'>
         <PoolFormInput label='Survey Title' value={state.title} dispatch={dispatch} field='title' />
         <PoolFormInput
           label='Description'
@@ -112,6 +112,6 @@ export const PoolFormCreator = () => {
           <p className='text-xl'>ID: {id}</p>
         </div>
       )}
-    </>
+    </div>
   );
 };

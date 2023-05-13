@@ -4,6 +4,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import Button from '@mui/base/Button';
 import { ethers } from 'ethers';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,7 +37,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className='w-[375px] h-[676px] bg-black/80 flex items-center justify-center flex-col'>
           <div className='w-[90%] h-[90%] flex items-center justify-center bg-white rounded-xl pt-12 px-5 flex-col'>
             <header className='flex items-center justify-between w-full'>
-              <div>Eco Vote</div>
+              <div>
+                <Image src='/logo.jpeg' width={130} height={100} alt='logo' />
+              </div>
               <Button className='button' onClick={connectToMetamask}>
                 {account ? shortenWalletAddress(account, 9) : 'Connect Wallet'}
               </Button>

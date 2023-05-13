@@ -86,7 +86,7 @@ export default function Page({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className='h-full flex flex-col justify-start gap-10'>
+    <div className='h-full flex flex-col justify-start gap-10 p-4'>
       <div className='flex flex-col'>
         <p className='text-gray-500 text-xs'>Survey {params.id}</p>
         <p className='font-bold text-lg'>Thank you for voting in this Survey:</p>
