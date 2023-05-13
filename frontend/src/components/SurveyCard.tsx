@@ -4,13 +4,17 @@ import { RadioGroup } from '@headlessui/react';
 import { Survey } from '@/types';
 import classNames from 'classnames';
 import Button from '@mui/base/Button';
+import { useRouter } from 'next/navigation';
 
 const Option = ({ option }: { option: string }) => (
   <RadioGroup.Option value={option}>
     {({ checked }) => (
       <div
         className={classNames(
-          'h-8 flex items-center justify-start border-gray-200 border p-5 rounded-lg hover:bg-gray-200 cursor-pointer transition-all gap-3'
+          'h-8 flex items-center justify-start border-gray-200 border p-5 rounded-lg hover:bg-blue-100/40 cursor-pointer transition-all gap-3 hover:text-lg',
+          {
+            'bg-blue-500/40 hover:bg-blue-500/40': checked,
+          }
         )}
       >
         <input
@@ -27,11 +31,12 @@ const Option = ({ option }: { option: string }) => (
     )}
   </RadioGroup.Option>
 );
-export const SurveyCard = ({ title, image, option1, option2, option3, option4 }: Survey) => {
+export const SurveyCard = ({ title, image, option1, option2, id }: Survey) => {
+  const router = useRouter();
   const [selected, setSelected] = React.useState(null);
   return (
-    <div className='bg-white rounded-xl pt-6 px-10 text-slate-900'>
-      <p className='pb-4 text-xs text-gray-500'>Select an Answer</p>
+    <div className=''>
+      <p className='pb-4 text-xs text-gray-500'>Select an Answer {id}</p>
       <div className='grid grid-rows-2'>
         <RadioGroup
           value={selected}
@@ -48,7 +53,14 @@ export const SurveyCard = ({ title, image, option1, option2, option3, option4 }:
           </div>
         </RadioGroup>
         <div className='flex items-center justify-end'>
-          <Button onClick={() => {}} className='button w-[60%]'>
+          <Button
+            onClick={() => {
+              if (!selected) return;
+              console.log(selected);
+              router.push(`/result/${id}`);
+            }}
+            className='button w-[60%]'
+          >
             Vote
           </Button>
         </div>

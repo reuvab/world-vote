@@ -5,16 +5,15 @@ export const metadata = {
   description: 'Create a new poll',
 };
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
   return (
-    <section className=''>
+    <section className='h-full w-full p-4'>
       <SurveyVoter
         title='Would you like all building to be painted in red?'
         image='test'
         option1='Yes'
         option2='No'
-        option3='Green'
-        option4='Yellow'
+        id={params.id}
       />
     </section>
   );

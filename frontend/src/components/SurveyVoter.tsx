@@ -16,12 +16,12 @@ type WorldId = {
   nullifier_hash: string;
 };
 
-export const SurveyVoter = ({ title, image, option1, option2, option3, option4 }: Survey) => {
+export const SurveyVoter = ({ title, image, option1, option2, id }: Survey) => {
   const [isHuman, setIsHuman] = useState(false);
   const [worldId, setWorldId] = useState<WorldId | null>(null);
 
   return (
-    <>
+    <div className='text-slate-900 h-full'>
       {isHuman && (
         <IDKitWidget
           action='my_signal'
@@ -33,24 +33,17 @@ export const SurveyVoter = ({ title, image, option1, option2, option3, option4 }
           app_id='app_staging_57a3eb0482e27d59db5da1ece85fa642'
         >
           {({ open }) => (
-            <section className='flex flex-col items-center justify-center'>
+            <div className='flex justify-center items-center h-full -mt-6'>
               <Button onClick={open} className='button'>
                 Identify to see the pool
               </Button>
-            </section>
+            </div>
           )}
         </IDKitWidget>
       )}
       {!isHuman && (
-        <SurveyCard
-          title={title}
-          image={image}
-          option1={option1}
-          option2={option2}
-          option3={option3}
-          option4={option4}
-        />
+        <SurveyCard title={title} image={image} option1={option1} option2={option2} id={id} />
       )}
-    </>
+    </div>
   );
 };
