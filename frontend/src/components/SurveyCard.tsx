@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import { Survey } from '@/types';
 import classNames from 'classnames';
@@ -7,6 +7,9 @@ import Button from '@mui/base/Button';
 import { useRouter } from 'next/navigation';
 import { DocumentTextIcon } from '@heroicons/react/24/solid';
 import { getContract, handleContractTransaction } from '@/utils/contract';
+import { WorldId } from './SurveyVoter';
+import { UserContext } from '@/utils/userContext';
+import { ethers } from 'ethers';
 
 const Option = ({ option }: { option: string }) => (
   <RadioGroup.Option value={option}>
@@ -33,10 +36,20 @@ const Option = ({ option }: { option: string }) => (
     )}
   </RadioGroup.Option>
 );
-export const SurveyCard = ({ title, hash, description, endTime, id }: Survey) => {
+export const SurveyCard = ({
+  title,
+  hash,
+  description,
+  endTime,
+  id,
+  worldId,
+}: Survey & { worldId: WorldId | null }) => {
   const router = useRouter();
   const [selected, setSelected] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const account = useContext(UserContext);
+  console.log(account);
 
   return (
     <div className=''>
@@ -61,10 +74,30 @@ export const SurveyCard = ({ title, hash, description, endTime, id }: Survey) =>
           <Button
             disabled={isLoading}
             onClick={async () => {
-              if (!selected) return;
+              if (!selected || !worldId || account === '') return;
               setIsLoading(true);
               const contract = await getContract();
-              const tx = await contract.vote(id, selected === 'Yes' ? true : false);
+              const unpackedProof = ethers.utils.defaultAbiCoder.decode(
+                ['uint256[8]'],
+                worldId.proof
+              )[0];
+
+              console.log({
+                id,
+                selected: selected === 'Yes' ? true : false,
+                account,
+                root: worldId.merkle_root,
+                nullifier: worldId.nullifier_hash,
+                proof: unpackedProof,
+              });
+              const tx = await contract.vote(
+                id,
+                selected === 'Yes' ? true : false,
+                account,
+                worldId.merkle_root,
+                worldId.nullifier_hash,
+                unpackedProof
+              );
               const receipt = await handleContractTransaction(tx);
               if (receipt) {
                 setIsLoading(false);

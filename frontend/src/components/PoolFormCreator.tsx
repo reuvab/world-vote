@@ -68,12 +68,11 @@ export const PoolFormCreator = () => {
     setIsLoading(true);
     const contract = await getContract();
     const tx = await contract.createPoll(state.title, state.description, state.hash);
-    console.log(tx);
     const transactionReceipt = await handleContractTransaction(tx);
     if (transactionReceipt) {
       console.log(transactionReceipt.events?.[0].args?.[0]);
       setId(transactionReceipt.events?.[0].args?.[0].toString());
-      //dispatch({ type: 'reset', payload: '' });
+      dispatch({ type: 'reset', payload: '' });
       console.log('Transaction successful');
     } else {
       console.log('Transaction failed');

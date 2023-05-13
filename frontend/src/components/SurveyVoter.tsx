@@ -1,15 +1,17 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 import Button from '@mui/base/Button';
 import { Survey } from '@/types';
 import { SurveyCard } from '@/components/SurveyCard';
+import { solidityEncode } from '@worldcoin/idkit';
+import { UserContext } from '@/utils/userContext';
 
 const IDKitWidget = dynamic(() => import('@worldcoin/idkit').then((mod) => mod.IDKitWidget), {
   ssr: false,
 });
-type WorldId = {
+export type WorldId = {
   merkle_root: string;
   proof: string;
   credential_type: string;
@@ -20,11 +22,14 @@ export const SurveyVoter = ({ title, hash, description, endTime, id }: Survey) =
   const [isHuman, setIsHuman] = useState(false);
   const [worldId, setWorldId] = useState<WorldId | null>(null);
 
+  const account = useContext(UserContext);
+
   return (
     <div className='text-slate-900 h-full'>
       {!isHuman && (
         <IDKitWidget
-          action='test1'
+          action='action_id'
+          signal={solidityEncode(['address'], [account])}
           onSuccess={(result) => {
             setIsHuman(true);
             console.log(result);
@@ -42,7 +47,14 @@ export const SurveyVoter = ({ title, hash, description, endTime, id }: Survey) =
         </IDKitWidget>
       )}
       {isHuman && (
-        <SurveyCard title={title} hash={hash} description={description} endTime={endTime} id={id} />
+        <SurveyCard
+          title={title}
+          hash={hash}
+          description={description}
+          endTime={endTime}
+          id={id}
+          worldId={worldId}
+        />
       )}
     </div>
   );

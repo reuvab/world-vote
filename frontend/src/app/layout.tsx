@@ -3,8 +3,8 @@ import { useState } from 'react';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Button from '@mui/base/Button';
-import { ethers } from 'ethers';
 import Image from 'next/image';
+import { UserContext } from '@/utils/userContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +17,7 @@ function shortenWalletAddress(walletAddress: string, length: number): string {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const [account, setAccount] = useState<string | null>(null);
+  const [account, setAccount] = useState('');
 
   const connectToMetamask = async () => {
     if ((window as any).ethereum) {
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {account ? shortenWalletAddress(account, 9) : 'Connect Wallet'}
               </Button>
             </header>
-            {children}
+            <UserContext.Provider value={account}>{children}</UserContext.Provider>
           </div>
         </main>
       </body>

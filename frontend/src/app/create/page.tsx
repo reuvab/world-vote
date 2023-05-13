@@ -1,9 +1,5 @@
+'use client';
 import { PoolFormCreator } from '@/components';
-
-export const metadata = {
-  title: 'Create New Poll',
-  description: 'Create a new poll',
-};
 
 export default function Page() {
   return (
