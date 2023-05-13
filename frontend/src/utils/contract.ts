@@ -4,7 +4,7 @@ import { ContractTransaction } from 'ethers';
 const CONTRACT_ADDRESS = '0x4aBCa6D51b42bA971919056349C63e1da0bbC765';
 
 export function getProvider() {
-  return new ethers.providers.Web3Provider(window.ethereum, 80001);
+  return new ethers.providers.Web3Provider((window as any).ethereum, 80001);
 }
 export async function getContract() {
   const abi = require('../../abis/Vote.json');

@@ -19,9 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [account, setAccount] = useState<string | null>(null);
 
   const connectToMetamask = async () => {
-    if (window.ethereum) {
+    if ((window as any).ethereum) {
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
         setAccount(accounts[0]);
       } catch (error) {
         console.error(error);
