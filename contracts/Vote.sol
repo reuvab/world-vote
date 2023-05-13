@@ -106,7 +106,7 @@ contract Vote {
     }
 
     // returns true if nullifierhash is in poll.voters array; otherwise false
-    function alreadyVoted(Poll memory poll, uint256 nullifierhash) internal pure returns(bool) {
+    function alreadyVoted(Poll storage poll, uint256 nullifierhash) internal view returns(bool) {
         for (uint i = 0; i < poll.voters.length; i++) {
             if (poll.voters[i] == nullifierhash) {
                 return true;
