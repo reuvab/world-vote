@@ -22,15 +22,15 @@ export const SurveyVoter = ({ title, hash, description, endTime, id }: Survey) =
 
   return (
     <div className='text-slate-900 h-full'>
-      {isHuman && (
+      {!isHuman && (
         <IDKitWidget
-          action='my_signal'
+          action='test1'
           onSuccess={(result) => {
             setIsHuman(true);
             console.log(result);
             setWorldId(result);
           }}
-          app_id='app_staging_57a3eb0482e27d59db5da1ece85fa642'
+          app_id='app_a3813ad19964a976be18e03679ac9efe'
         >
           {({ open }) => (
             <div className='flex justify-center items-center h-full -mt-6'>
@@ -41,7 +41,7 @@ export const SurveyVoter = ({ title, hash, description, endTime, id }: Survey) =
           )}
         </IDKitWidget>
       )}
-      {!isHuman && (
+      {isHuman && (
         <SurveyCard title={title} hash={hash} description={description} endTime={endTime} id={id} />
       )}
     </div>
