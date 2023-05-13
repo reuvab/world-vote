@@ -11,7 +11,7 @@ async function main() {
         
   const Vote = await hre.ethers.getContractFactory("Vote");
   const vote = await Vote.deploy(
-    "0xD81dE4BCEf43840a2883e5730d014630eA6b7c4A",
+    "0xABB70f7F39035586Da57B3c8136035f87AC0d2Aa",
     "app_staging_f3421f346e1c0c735829f859672f4af1"
   );
 
