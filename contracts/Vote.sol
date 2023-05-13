@@ -30,15 +30,13 @@ contract Vote {
 
     /// @param _worldId The WorldID instance that will verify the proofs
     /// @param _appId The World ID app ID
-    /// @param _actionId The World ID action ID
     constructor(
         IWorldID _worldId,
-        string memory _appId,
-        string memory _actionId
+        string memory _appId
     ) {
         worldId = _worldId;
         externalNullifier = abi
-            .encodePacked(abi.encodePacked(_appId).hashToField(), _actionId)
+            .encodePacked(abi.encodePacked(_appId).hashToField(), address(this))
             .hashToField();
     }
 

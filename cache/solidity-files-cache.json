@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/victor/world-vote/contracts/Vote.sol": {
-      "lastModificationDate": 1684010950678,
-      "contentHash": "106475ec09f4d7138f2552ff6d10698b",
+      "lastModificationDate": 1684016376188,
+      "contentHash": "eda6125600e4df5bffd7594795fb5ded",
       "sourceName": "contracts/Vote.sol",
       "solcConfig": {
         "version": "0.8.18",
