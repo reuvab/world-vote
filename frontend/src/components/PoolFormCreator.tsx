@@ -3,13 +3,14 @@ import React, { useReducer, useState } from 'react';
 import Button from '@mui/base/Button';
 import Input from '@mui/base/Input';
 import { Survey } from '@/types';
+import { getContract, handleContractTransaction } from '@/utils/contract';
 
 const initialState: Survey = {
   id: '',
   title: '',
-  image: '',
-  option1: '',
-  option2: '',
+  hash: '',
+  description: '',
+  endTime: '0',
 };
 
 type Action = {
@@ -21,12 +22,12 @@ const reducer = (state: Survey, action: Action) => {
   switch (action.type) {
     case 'title':
       return { ...state, title: action.payload };
-    case 'image':
-      return { ...state, image: action.payload };
-    case 'option1':
-      return { ...state, option1: action.payload };
-    case 'option2':
-      return { ...state, option2: action.payload };
+    case 'hash':
+      return { ...state, hash: action.payload };
+    case 'description':
+      return { ...state, description: action.payload };
+    case 'endTime':
+      return { ...state, endTime: action.payload };
     case 'reset':
       return initialState;
     default:
@@ -61,40 +62,42 @@ const PoolFormInput = ({
 export const PoolFormCreator = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isLoading, setIsLoading] = useState(false);
+  const [id, setId] = useState('');
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      console.log('clicked');
-      console.log({
-        title: state.title,
-        image: state.image,
-        option1: state.option1,
-        option2: state.option2,
-      });
-      
-      dispatch({ type: 'reset', payload: '' });
-      setIsLoading(false);
-    }, 200);
+    const contract = await getContract();
+    const tx = await contract.createPoll(state.title, state.description, state.hash);
+    console.log(tx);
+    const transactionReceipt = await handleContractTransaction(tx);
+    if (transactionReceipt) {
+      console.log(transactionReceipt.events?.[0].args?.[0]);
+      setId(transactionReceipt.events?.[0].args?.[0].toString());
+      //dispatch({ type: 'reset', payload: '' });
+      console.log('Transaction successful');
+    } else {
+      console.log('Transaction failed');
+    }
+    setIsLoading(false);
   };
 
   return (
     <>
       <form className='flex flex-col'>
-        <PoolFormInput label='Poll Title' value={state.title} dispatch={dispatch} field='title' />
-        <PoolFormInput label='Image' value={state.image} dispatch={dispatch} field='image' />
+        <PoolFormInput label='Survey Title' value={state.title} dispatch={dispatch} field='title' />
         <PoolFormInput
-          label='Pool Option 1'
-          value={state.option1}
+          label='Description'
+          value={state.description}
           dispatch={dispatch}
-          field='option1'
+          field='description'
         />
         <PoolFormInput
-          label='Pool Option 2'
-          value={state.option2}
+          label='Document IPFS Hash'
+          value={state.hash}
           dispatch={dispatch}
-          field='option2'
+          field='hash'
         />
+        <PoolFormInput label='End Time' value={state.endTime} dispatch={dispatch} field='endTime' />
       </form>
       <Button
         className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
@@ -102,6 +105,12 @@ export const PoolFormCreator = () => {
       >
         {isLoading ? 'Loading...' : 'Create Pool'}
       </Button>
+      {id && (
+        <div className='text-center'>
+          <p className='text-xl'>Pool Created!</p>
+          <p className='text-xl'>ID: {id}</p>
+        </div>
+      )}
     </>
   );
 };

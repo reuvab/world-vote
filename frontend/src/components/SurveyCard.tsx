@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import Button from '@mui/base/Button';
 import { useRouter } from 'next/navigation';
 import { DocumentTextIcon } from '@heroicons/react/24/solid';
+import { getContract } from '@/utils/contract';
 
 const Option = ({ option }: { option: string }) => (
   <RadioGroup.Option value={option}>
@@ -32,12 +33,12 @@ const Option = ({ option }: { option: string }) => (
     )}
   </RadioGroup.Option>
 );
-export const SurveyCard = ({ title, image, option1, option2, id }: Survey) => {
+export const SurveyCard = ({ title, hash, description, endTime, id }: Survey) => {
   const router = useRouter();
   const [selected, setSelected] = React.useState(null);
   return (
     <div className=''>
-      <p className='pb-4 text-xs text-gray-500'>Select an Answer {id}</p>
+      <p className='pb-4 text-xs text-gray-500'>Select an Answer for Survey {id}</p>
       <div className='grid grid-rows-2'>
         <RadioGroup
           value={selected}
@@ -45,19 +46,21 @@ export const SurveyCard = ({ title, image, option1, option2, id }: Survey) => {
           className='flex flex-col
        gap-6'
         >
-          <RadioGroup.Label className='font-bold flex items-center justify-center'>
-            {title}
+          <RadioGroup.Label className='font-bold flex items-center justify-center flex-col gap-3'>
+            <h1>{title}</h1>
+            <p className='text-xs text-gray-500'>{description}</p>
           </RadioGroup.Label>
           <div className='grid grid-rows-2 gap-y-4'>
-            <Option option={option1} />
-            <Option option={option2} />
+            <Option option='Yes' />
+            <Option option='No' />
           </div>
         </RadioGroup>
         <div className='flex items-center justify-end'>
           <Button
-            onClick={() => {
+            onClick={async () => {
               if (!selected) return;
-              console.log(selected);
+              const contract = await getContract();
+              await contract.vote(id, selected === 'Yes' ? true : false);
               router.push(`/result/${id}`);
             }}
             className='button w-[60%]'
@@ -68,7 +71,7 @@ export const SurveyCard = ({ title, image, option1, option2, id }: Survey) => {
       </div>
       <div>
         <a
-          href='https://ipfs.io/ipfs/bafybeidlbmmlkqaafe3nu535hiiba44ks23gani3ph4njiakdctok2ip2y/'
+          href={`https://ipfs.io/ipfs/${hash}/`}
           target='_blank'
           className='text-lg text-gray-500 flex flex-row'
         >

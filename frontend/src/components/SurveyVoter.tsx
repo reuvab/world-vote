@@ -16,7 +16,7 @@ type WorldId = {
   nullifier_hash: string;
 };
 
-export const SurveyVoter = ({ title, image, option1, option2, id }: Survey) => {
+export const SurveyVoter = ({ title, hash, description, endTime, id }: Survey) => {
   const [isHuman, setIsHuman] = useState(false);
   const [worldId, setWorldId] = useState<WorldId | null>(null);
 
@@ -42,7 +42,7 @@ export const SurveyVoter = ({ title, image, option1, option2, id }: Survey) => {
         </IDKitWidget>
       )}
       {!isHuman && (
-        <SurveyCard title={title} image={image} option1={option1} option2={option2} id={id} />
+        <SurveyCard title={title} hash={hash} description={description} endTime={endTime} id={id} />
       )}
     </div>
   );

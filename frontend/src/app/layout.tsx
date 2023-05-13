@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Button from '@mui/base/Button';
+import { ethers } from 'ethers';
 
 const inter = Inter({ subsets: ['latin'] });
 

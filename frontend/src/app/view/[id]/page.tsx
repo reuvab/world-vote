@@ -1,20 +1,29 @@
+'use client';
 import { SurveyVoter } from '@/components';
-
-export const metadata = {
-  title: 'Read Poll',
-  description: 'Create a new poll',
-};
+import { getContract } from '@/utils/contract';
+import { useEffect, useState } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
+  const [title, setTitle] = useState<string>('');
+  const [hash, setHash] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+
+  useEffect(() => {
+    const fetchPoolInfo = async () => {
+      const contract = await getContract();
+      const poolInfo = await contract.getPoll(params.id);
+      const [poolTitle, poolDescription, , , poolHash] = poolInfo;
+      setTitle(poolTitle);
+      setHash(poolHash);
+      setDescription(poolDescription);
+
+      //TODO: add end time
+    };
+    fetchPoolInfo();
+  }, []);
   return (
     <section className='h-full w-full p-4'>
-      <SurveyVoter
-        title='Would you like all building to be painted in red?'
-        image='test'
-        option1='Yes'
-        option2='No'
-        id={params.id}
-      />
+      <SurveyVoter title={title} hash={hash} description={description} endTime='0' id={params.id} />
     </section>
   );
 }
