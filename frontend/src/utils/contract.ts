@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { ContractTransaction } from 'ethers';
 
-const CONTRACT_ADDRESS = '0x274B73F17eeED99bc0cdf0521F55AEc84FE2b6CE';
+const CONTRACT_ADDRESS = '0xe43d0aC9f6cEAD387581C4e294bdD5e8Fd0f5B95';
 
 export function getProvider() {
   return new ethers.providers.Web3Provider((window as any).ethereum, 80001);
