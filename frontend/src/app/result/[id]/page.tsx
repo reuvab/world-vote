@@ -1,24 +1,91 @@
+'use client';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
+
+import {
+  Chart as ChartJS,
+  LinearScale,
+  ArcElement,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
+
+const options = {
+  indexAxis: 'y' as const,
+  elements: {
+    bar: {
+      borderWidth: 2,
+    },
+  },
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: true,
+      text: 'Chart.js Horizontal Bar Chart',
+    },
+  },
+  scales: {
+    x: {
+      display: false,
+    },
+  },
+};
 
 export default function Page({ params }: { params: { id: string } }) {
+  const [poolInfo, setPoolInfo] = React.useState<Object | undefined>(undefined);
+
+  useEffect(() => {
+    const fetchPoolInfo = async () => {
+      //TODO: replace by smart contract call
+      const res = await fetch(`/api/poll/${params.id}`);
+      setPoolInfo(data);
+    };
+    fetchPoolInfo();
+  }, []);
+
+  const data = {
+    labels: ['Yes', 'No'],
+    datasets: [
+      {
+        axis: 'y',
+        label: 'Votes',
+        data: [65, 59],
+        fill: false,
+        backgroundColor: ['#4299E1', 'rgb(148 163 184)'],
+        borderColor: ['rgb(120 113 108);', 'rgb(120 113 108);'],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const config = {
+    type: 'bar',
+    data,
+    options: {
+      indexAxis: 'y',
+    },
+  };
+
   return (
     <div className='h-full flex flex-col justify-start gap-10'>
       <div className='flex flex-col'>
-        <p>You voted for Survey {params.id}</p>
-        <Image src='/party.png' alt='Picture of the author' width={200} height={200} />
+        <p className='text-gray-500 text-xs'>Survey {params.id}</p>
+        <p className='font-bold text-lg'>Thank you for voting in this Survey:</p>
+        <p className='pb-3 text-sm'>Would you like all building to be painted in red?</p>
+        <p>This survey will finish in 25 minutes</p>
       </div>
       <div>
-        <h1>Results</h1>
+        <h1 className='font-bold text-lg'>Results</h1>
         <div className='flex flex-col'>
-          <div className='flex flex-row'>
-            <p>Yes</p>
-            <p>10</p>
-          </div>
-          <div className='flex flex-row'>
-            <p>No</p>
-            <p>10</p>
-          </div>
+          <Bar data={data} options={options} />
         </div>
       </div>
     </div>
