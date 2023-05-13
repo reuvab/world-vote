@@ -10,6 +10,7 @@ import { getContract, handleContractTransaction } from '@/utils/contract';
 import { WorldId } from './SurveyVoter';
 import { UserContext } from '@/utils/userContext';
 import { ethers } from 'ethers';
+import { Modal } from './Modal';
 
 const Option = ({ option }: { option: string }) => (
   <RadioGroup.Option value={option}>
@@ -47,6 +48,7 @@ export const SurveyCard = ({
   const router = useRouter();
   const [selected, setSelected] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpened, setIsOpened] = useState(false);
 
   const account = useContext(UserContext);
   console.log(account);
@@ -90,20 +92,27 @@ export const SurveyCard = ({
                 nullifier: worldId.nullifier_hash,
                 proof: unpackedProof,
               });
-              const tx = await contract.vote(
-                id,
-                selected === 'Yes' ? true : false,
-                account,
-                worldId.merkle_root,
-                worldId.nullifier_hash,
-                unpackedProof
-              );
-              const receipt = await handleContractTransaction(tx);
-              if (receipt) {
-                setIsLoading(false);
-                router.push(`/result/${id}`);
-              } else {
-                console.log('Transaction failed');
+
+              try {
+                const tx = await contract.vote(
+                  id,
+                  selected === 'Yes' ? true : false,
+                  account,
+                  worldId.merkle_root,
+                  worldId.nullifier_hash,
+                  unpackedProof
+                );
+                const receipt = await handleContractTransaction(tx);
+                if (receipt) {
+                  setIsLoading(false);
+                  router.push(`/result/${id}`);
+                } else {
+                  console.log('Transaction failed');
+                  setIsOpened(true);
+                  setIsLoading(false);
+                }
+              } catch (e) {
+                setIsOpened(true);
                 setIsLoading(false);
               }
             }}
@@ -123,6 +132,7 @@ export const SurveyCard = ({
           View Survey Files on IPFS
         </a>
       </div>
+      <Modal isOpen={isOpened} setIsOpen={setIsOpened} />
     </div>
   );
 };
