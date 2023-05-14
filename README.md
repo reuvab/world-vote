@@ -5,7 +5,7 @@ It enables users to impact the fight against climate change directly and helps p
 
 Tech we used:
 
-Worldcoin for unique proof of humanity ID
-Polygon for smart contract
-Solidity 0.6 for smart contracts
-NextJS in typescript with tailwindcss for the UI
+- Worldcoin for unique proof of humanity ID
+- Polygon for smart contract
+- Solidity 0.6 for smart contracts
+- NextJS in typescript with tailwindcss for the UI
