@@ -96,7 +96,6 @@ export const PoolFormCreator = () => {
           dispatch={dispatch}
           field='hash'
         />
-        <PoolFormInput label='End Time' value={state.endTime} dispatch={dispatch} field='endTime' />
       </form>
       <Button
         disabled={isLoading}
